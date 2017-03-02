@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
      * 获取数据
      */
     private void getData() {
-        HttpUtils.getData("https://doub.io/sszhfx/", new HttpCallBackListener() {
+        HttpUtils.getData("http://www.grwork.cn/jump/code/file.html", new HttpCallBackListener() {
             @Override
             public void onSuccess(String data) {
                 //成功
