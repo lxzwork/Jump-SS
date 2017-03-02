@@ -1,14 +1,11 @@
 package com.example.dell.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,17 +21,13 @@ import com.bumptech.glide.Glide;
 import com.example.dell.vo.ShowVO;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.zxing.support.library.qrcode.QRCodeEncode;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.HashMap;
 import java.util.Hashtable;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -156,22 +149,6 @@ public class DetailsActivity extends AppCompatActivity {
             mTextViewIP.setText("流量耗尽");
         }
     }
-
-    /**
-     * 加载二维码
-     *
-     * @param strUrl
-     */
-    private Bitmap loadQR(String strUrl) {
-        QRCodeEncode.Builder builder = new QRCodeEncode.Builder();
-        builder.setBackgroundColor(0xffffff)
-                .setOutputBitmapHeight(1000)
-                .setOutputBitmapWidth(1000)
-                .setOutputBitmapPadding(1);
-        Bitmap bitmap = builder.build().encode(strUrl);
-        return bitmap;
-    }
-
     /**
      * 加载二维码
      *
