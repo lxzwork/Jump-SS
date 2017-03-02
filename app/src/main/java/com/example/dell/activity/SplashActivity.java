@@ -195,6 +195,11 @@ public class SplashActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             return;
         }
+        //已经同意
+        //注册广播
+        regBroadcast();
+        initAnimation();
+        getData();
     }
 
     @Override
