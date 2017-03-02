@@ -1,14 +1,18 @@
 package com.example.dell.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,11 +22,20 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.dell.vo.ShowVO;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.zxing.support.library.qrcode.QRCodeEncode;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 public class DetailsActivity extends AppCompatActivity {
     //常量
@@ -98,7 +111,7 @@ public class DetailsActivity extends AppCompatActivity {
                 bos.close();
                 Toast.makeText(DetailsActivity.this, "下载完成", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-
+                Toast.makeText(DetailsActivity.this,"出现错误",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -125,7 +138,7 @@ public class DetailsActivity extends AppCompatActivity {
         //二维码
         Log.e("pic", mShowVO.getmImg());
         //加载二维码
-        mBitmapCode = loadQR(mShowVO.getmImg());
+        mBitmapCode = loadZxingQR(mShowVO.getmImg());
         mImageQR.setImageBitmap(mBitmapCode);
         //标题栏
         mCollBar.setTitle(mShowVO.getmAddress());
@@ -157,6 +170,46 @@ public class DetailsActivity extends AppCompatActivity {
                 .setOutputBitmapPadding(1);
         Bitmap bitmap = builder.build().encode(strUrl);
         return bitmap;
+    }
+
+    /**
+     * 加载二维码
+     *
+     * @param strUrl
+     */
+    private Bitmap loadZxingQR(String strUrl) {
+        try {
+
+            if (TextUtils.isEmpty(strUrl)) {
+                return null;
+            }
+            QRCodeWriter writer = new QRCodeWriter();
+            BitMatrix martix = writer.encode(strUrl, BarcodeFormat.QR_CODE,
+                    300, 300);
+            Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            BitMatrix bitMatrix = new QRCodeWriter().encode(strUrl,
+                    BarcodeFormat.QR_CODE, 300, 300, hints);
+            int[] pixels = new int[300 * 300];
+            for (int y = 0; y < 300; y++) {
+                for (int x = 0; x < 300; x++) {
+                    if (bitMatrix.get(x, y)) {
+                        pixels[y * 300 + x] = 0xff000000;
+                    } else {
+                        pixels[y * 300 + x] = 0xffffffff;
+                    }
+                }
+            }
+
+            Bitmap bitmap = Bitmap.createBitmap(300, 300,
+                    Bitmap.Config.ARGB_8888);
+
+            bitmap.setPixels(pixels, 0, 300, 0, 0, 300, 300);
+            return bitmap;
+        } catch (WriterException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

@@ -161,13 +161,6 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //下载新版本
-                        //申请权限
-                        //申请权限
-                        if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            //无权限
-                            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                            return;
-                        }
                         //启动下载
                         mMyBinder.startDownload(strUrl);
 
@@ -192,19 +185,27 @@ public class SplashActivity extends AppCompatActivity {
         registerReceiver(mMyBroadcast, intentFilter);
     }
 
+    /**
+     * 申请权限
+     */
+    private void sqqx() {
+        //申请权限
+        if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //无权限
+            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            return;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         bindID();
-        //注册广播
-        regBroadcast();
         //启动服务
         startServer();
-        initAnimation();
-        getData();
-
-
+        //申请权限
+        sqqx();
     }
 
     //启动服务
@@ -299,12 +300,18 @@ public class SplashActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         //解绑更新服务
-        mMyBinder.cancelDownload();
-        //为空
-        mMyBinder = null;
-        unbindService(mServiceConnection);
+        if (mMyBinder != null) {
+            mMyBinder.cancelDownload();
+            //为空
+            mMyBinder = null;
+        }
+
         //取消广播
-        unregisterReceiver(mMyBroadcast);
+        if (mMyBroadcast != null) {
+            unregisterReceiver(mMyBroadcast);
+        }
+
+        unbindService(mServiceConnection);
     }
 
     //权限返回
@@ -315,10 +322,15 @@ public class SplashActivity extends AppCompatActivity {
                 //判断
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //同意
-                    downloadNewVersion(mStrUrl);
+                    //注册广播
+                    regBroadcast();
+                    initAnimation();
+                    getData();
+
                 } else {
                     //不同意
-                    Toast.makeText(SplashActivity.this, "请赋予写入权限", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashActivity.this, "无法下载更新与保存二维码\n请允许软件使用存储的权限", Toast.LENGTH_LONG).show();
+                    finish();
                 }
                 break;
         }
