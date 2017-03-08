@@ -95,13 +95,14 @@ public class SplashActivity extends AppCompatActivity {
             int server = jsonObject.getInt("server");
             int version = jsonObject.getInt("version");
             String url = jsonObject.getString("url");
+            String content = jsonObject.getString("content");
             if (server == 0) {
                 //服务器禁止使用，销毁界面
                 mHandler.sendEmptyMessage(SERVICE_STOP);
                 return;
             }
             //比较版本
-            isNewVersion(version, url);
+            isNewVersion(version, url, content);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -112,9 +113,10 @@ public class SplashActivity extends AppCompatActivity {
      * 判断版本是否更新
      *
      * @param version
+     * @param s
      * @param url
      */
-    private void isNewVersion(int version, String url) {
+    private void isNewVersion(int version, String url, String content) {
         mStrUrl = url;
         //设置时间
         endTime = System.currentTimeMillis();
@@ -139,7 +141,7 @@ public class SplashActivity extends AppCompatActivity {
 
         } else if (localVersion < version) {
             //更新版本
-            downloadNewVersion(url);
+            downloadNewVersion(url, content);
         } else if (localVersion > version) {
             //最新版本，进入首页
             jumpPage();
@@ -149,13 +151,15 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * 下载新版本
      *
+     * @param content
      * @param strUrl
      */
-    private void downloadNewVersion(final String strUrl) {
+    private void downloadNewVersion(final String strUrl, final String content) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
+                builder.setMessage(content);
                 builder.setTitle("是否下载新版本？").setPositiveButton("是", new DialogInterface.OnClickListener() {
 
                     @Override

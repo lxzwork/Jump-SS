@@ -7,7 +7,7 @@ android {
         applicationId "com.example.dell.jump"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 3
+        versionCode 4
         versionName "全能版"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
