@@ -61,7 +61,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
                     <ImageView
                         android:id="@+id/details_imageview_qr"
@@ -175,6 +176,20 @@
                             android:text="加密方式"
                             android:textIsSelectable="true" />
                     </LinearLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#eeeeee" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button"
+                        android:onClick="copySS"
+                        android:text="复制SS链接"
+                        android:textColor="#ffffff" />
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>

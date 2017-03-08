@@ -1,5 +1,8 @@
 package com.example.dell.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -48,6 +51,8 @@ public class DetailsActivity extends AppCompatActivity {
     private CollapsingToolbarLayout mCollBar;
     //二维码
     private Bitmap mBitmapCode;
+    //获取ss
+    private String strSS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,8 @@ public class DetailsActivity extends AppCompatActivity {
         }
         //获取前面的数据
         getData();
+        //获取ss
+        strSS = mShowVO.getmImg();
         //设置数据
         setData();
         //长按提示
@@ -104,7 +111,7 @@ public class DetailsActivity extends AppCompatActivity {
                 bos.close();
                 Toast.makeText(DetailsActivity.this, "下载完成", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                Toast.makeText(DetailsActivity.this,"出现错误",Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailsActivity.this, "出现错误", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -149,6 +156,7 @@ public class DetailsActivity extends AppCompatActivity {
             mTextViewIP.setText("流量耗尽");
         }
     }
+
     /**
      * 加载二维码
      *
@@ -219,5 +227,15 @@ public class DetailsActivity extends AppCompatActivity {
         mShowVO = new ShowVO(mAddress, mIp, mPost, mPassword, mEncryption, mName, mImg, mCountry);
     }
 
+    /**
+     * 复制二维码
+     *
+     * @param view
+     */
+    public void copySS(View view) {
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        cm.setText(strSS);
+        Toast.makeText(DetailsActivity.this, "复制成功", Toast.LENGTH_SHORT).show();
+    }
 
 }
